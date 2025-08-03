@@ -4,13 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import org.koin.androidx.viewmodel.ext.android.getViewModel
+import ro.gtechco.scorekeeper.presentantion.MainScreen
+import ro.gtechco.scorekeeper.presentantion.MainScreenViewModel
 import ro.gtechco.scorekeeper.ui.theme.ScoreKeeperTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,7 +15,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ScoreKeeperTheme {
-
+                val mainScreenViewModel= getViewModel<MainScreenViewModel> ()
+                MainScreen(viewModel = mainScreenViewModel)
             }
         }
     }
