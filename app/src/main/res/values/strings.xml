@@ -1,4 +1,33 @@
 <resources>
     <string name="app_name">ScoreKeeper</string>
     <string name="main_screen_title">Score Keeper</string>
+    <string name="score_settings">Score settings</string>
+    <string name="target_score">Target score (e.g. 1000)</string>
+    <string name="score_st">Set the number of points required to win one game*</string>
+    <string name="player_details">Player details</string>
+    <string name="avatar">avatar</string>
+    <string name="player_picture">Add photo</string>
+    <string name="enter_player_name">Enter player name</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="icon_description">Icon\n</string>
+    <string name="avatar_img_description">Picture</string>
+    <string name="games_won">Games won:</string>
+    <string name="edit_player_text">Edit player</string>
+    <string name="change_photo">Change photo</string>
+    <string name="add_points">Add points</string>
+    <string name="edit_winning_score">Edit winning score</string>
+    <string name="reset_score">Reset score</string>
+    <string name="delete_player_ad">Delete player</string>
+    <string name="cannot_be_undone">This action cannot be undone</string>
+    <string name="confirm">Confirm</string>
+    <string name="award">Award points to</string>
+    <string name="points_added_info">These points will be added to the current score*</string>
+    <string name="add_points_ph">e.g. 150</string>
+    <string name="reset_player_score_title">Reset score and games for</string>
+    <string name="finish_game">Finish game</string>
+    <string name="reset_total">Reset all score&amp;games</string>
+    <string name="edit_maximum_score">Edit winning score</string>
+    <string name="total_reset_title">Reset score and games for all players?</string>
+    <string name="update_winning_score">Update winning score limit</string>
 </resources>

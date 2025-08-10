@@ -9,5 +9,5 @@ data class Score(
     @PrimaryKey(autoGenerate = true)
     val id:Int?=null,
     @ColumnInfo(name = "maximumScore")
-    val maximumScore:Int
+    val maximumScore:Int=0
 )
