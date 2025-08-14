@@ -45,6 +45,7 @@ import ro.gtechco.scorekeeper.presentantion.composables.AddPlayerBottomSheet
 import ro.gtechco.scorekeeper.presentantion.composables.AddPointsAlertDialog
 import ro.gtechco.scorekeeper.presentantion.composables.DeletePlayerAlertDialog
 import ro.gtechco.scorekeeper.presentantion.composables.EditWinningScoreAlertDialog
+import ro.gtechco.scorekeeper.presentantion.composables.FinishGameAlertDialog
 import ro.gtechco.scorekeeper.presentantion.composables.GameSettingsDropdownMenu
 import ro.gtechco.scorekeeper.presentantion.composables.PlayerItem
 import ro.gtechco.scorekeeper.presentantion.composables.ResetPlayerScoreAlertDialog
@@ -206,6 +207,14 @@ if (viewModel.screenState.value.showDeletePlayerAlertDialog)
             onValueChange = {score->viewModel.onEvent(MainScreenEvent.OnMaximumScoreEditValueChange(score)) },
             onConfirmClick = {viewModel.onEvent(MainScreenEvent.OnConfirmMaximumScoreEdit)},
             onDismissRequest = {viewModel.onEvent(MainScreenEvent.OnDismissEditMaximumScoreAd)}
+        )
+    }
+    if (viewModel.screenState.value.showFinishGameAlertDialog)
+    {
+        FinishGameAlertDialog(
+            playerDto = viewModel.winner.value,
+            onConfirmClick = {viewModel.onEvent(MainScreenEvent.OnConfirmFinishGameAd)},
+            onDismissRequest = {viewModel.onEvent(MainScreenEvent.OnDismissFinishGameAd)}
         )
     }
 }

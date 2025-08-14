@@ -7,5 +7,6 @@ data class MainScreenState (
     val showResetPlayerScoreAlertDialog:Boolean=false,
     val showSettingsDropdownMenu:Boolean=false,
     val showTotalResetAlertDialog:Boolean=false,
-    val showEditWinningScoreAlertDialog:Boolean=false
+    val showEditWinningScoreAlertDialog:Boolean=false,
+    val showFinishGameAlertDialog:Boolean=false
 )

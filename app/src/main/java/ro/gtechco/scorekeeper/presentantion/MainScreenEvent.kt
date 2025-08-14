@@ -25,6 +25,8 @@ sealed class MainScreenEvent {
     data object OnDismissEditMaximumScoreAd:MainScreenEvent()
     data object OnConfirmMaximumScoreEdit:MainScreenEvent()
     data object OnShowMaximumScoreAd:MainScreenEvent()
+    data object OnDismissFinishGameAd:MainScreenEvent()
+    data object OnConfirmFinishGameAd:MainScreenEvent()
 
     data class OnPlayerAvatarUriResult(val uri: Uri?):MainScreenEvent()
     data class OnPlayerNameChange(val name:String):MainScreenEvent()

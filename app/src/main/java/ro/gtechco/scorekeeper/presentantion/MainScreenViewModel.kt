@@ -48,6 +48,10 @@ class MainScreenViewModel(
 
     private val _editedMaximumScore= mutableStateOf("")
     val editedMaximumScore:State<String> = _editedMaximumScore
+
+    private val _winner= mutableStateOf(PlayerDto())
+    val winner:State<PlayerDto> = _winner
+
     //one time events
     private val _eventFlow= MutableSharedFlow<UiEvent>()
     val eventFlow=_eventFlow.asSharedFlow()
@@ -209,13 +213,9 @@ class MainScreenViewModel(
             }
 
             is MainScreenEvent.OnFinishGameClick -> {
-                val winner=_playerDtoList.value.find { dto-> dto.id==event.winnerId }?:PlayerDto()
-                viewModelScope.launch {
-                    playerDtoList.value.forEach { dto->
-                    playerRepository.updatePlayer(dto.copy(score = 0).toPlayer())
-                }
-                    playerRepository.updatePlayer(winner.copy(gamesWon = winner.gamesWon+1, score = 0).toPlayer())
-                }
+                _screenState.value=_screenState.value.copy(showFinishGameAlertDialog = true)
+                 _winner.value=_playerDtoList.value.find { dto-> dto.id==event.winnerId }?:PlayerDto()
+
             }
 
             is MainScreenEvent.OnDismissSettingsDropdownMenu -> {
@@ -262,8 +262,22 @@ class MainScreenViewModel(
 
             is MainScreenEvent.OnShowMaximumScoreAd -> {
                 _editedMaximumScore.value=_score.value.maximumScore.toString()
-                _screenState.value=_screenState.value.copy(showEditWinningScoreAlertDialog = true)
+                _screenState.value=_screenState.value.copy(showEditWinningScoreAlertDialog = true, showSettingsDropdownMenu = false)
 
+            }
+
+            is MainScreenEvent.OnConfirmFinishGameAd -> {
+                val champ=_winner.value
+                                viewModelScope.launch {
+                 playerDtoList.value.forEach { dto-> playerRepository.updatePlayer(dto.copy(score = 0).toPlayer())
+                }
+                   playerRepository.updatePlayer(champ.copy(gamesWon = champ.gamesWon+1, score = 0).toPlayer())
+               }
+                onEvent(MainScreenEvent.OnDismissFinishGameAd)
+            }
+            MainScreenEvent.OnDismissFinishGameAd -> {
+                _screenState.value=_screenState.value.copy(showFinishGameAlertDialog = false)
+                _winner.value= PlayerDto()
             }
         }
     }

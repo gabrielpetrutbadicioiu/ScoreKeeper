@@ -224,7 +224,7 @@ fun PlayerItem(
 
             val animatedProgress by animateFloatAsState(
                 targetValue = targetProgress,
-                animationSpec = tween(durationMillis = 8000, easing = FastOutSlowInEasing),
+                animationSpec = tween(durationMillis = 5000, easing = FastOutSlowInEasing),
                 label = "snailFill"
             )
 
@@ -273,13 +273,18 @@ fun PlayerItem(
                     iterations = LottieConstants.IterateForever,
                     isPlaying = true
                 )
-                Row(horizontalArrangement = Arrangement.Center,
+                Row(horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth()) {
-                    LottieAnimation(composition = champComposition, progress = progress, modifier=Modifier.size(100.dp))
+                    LottieAnimation(
+                        composition = champComposition,
+                        progress = progress,
+                        modifier=Modifier.size(128.dp)
+                    )
                     Button(
+                        modifier = Modifier.padding(end = 16.dp),
                         onClick = {onFinishGameClick()},
-                        colors = ButtonDefaults.buttonColors(containerColor = Color.Green)
+                        colors = ButtonDefaults.buttonColors(containerColor = colorResource(R.color.gold))
                     ) { Text(text = stringResource(R.string.finish_game)) }
                 }
                 Spacer(modifier = Modifier.height(12.dp))
