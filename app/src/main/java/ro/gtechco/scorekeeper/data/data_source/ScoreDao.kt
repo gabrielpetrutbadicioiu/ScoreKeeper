@@ -13,6 +13,6 @@ interface ScoreDao {
     suspend fun upsertScore(score: Score)
 
     @Query("SELECT * FROM `score-table` WHERE id = :scoreId")
-    fun getScore(scoreId:Int):Flow<Score>
+    fun getScore(scoreId:Int):Flow<Score?>
 
 }

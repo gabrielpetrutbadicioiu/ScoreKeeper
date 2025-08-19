@@ -1,7 +1,8 @@
 package ro.gtechco.scorekeeper.di
 
 import androidx.room.Room
-import org.koin.core.module.dsl.viewModel
+//import org.koin.core.module.dsl.viewModel
+import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import ro.gtechco.scorekeeper.data.data_source.PlayerDatabase
 import ro.gtechco.scorekeeper.data.repository.PlayerRepositoryImpl
@@ -21,15 +22,11 @@ val module= module {
             get(),
             PlayerDatabase::class.java,
             "PLAYER_DB",
-            ).build().playerDao
+            ).fallbackToDestructiveMigration().build()
     }
-    single {
-        Room.databaseBuilder(
-            get(),
-            PlayerDatabase::class.java,
-            "SCORE_DB"
-        ).build().scoreDao
-    }
+    single { get<PlayerDatabase>().playerDao}
+    single {get<PlayerDatabase>().scoreDao}
+
     single {
         UseCases(
             toDto = ToDto(),

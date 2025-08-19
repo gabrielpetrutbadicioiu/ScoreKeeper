@@ -10,7 +10,7 @@ class ScoreRepositoryImpl(private val dao: ScoreDao):ScoreRepository {
         dao.upsertScore(score)
     }
 
-    override fun getScore(scoreId: Int): Flow<Score> {
+    override fun getScore(scoreId: Int): Flow<Score?> {
         return dao.getScore(scoreId)
     }
 }

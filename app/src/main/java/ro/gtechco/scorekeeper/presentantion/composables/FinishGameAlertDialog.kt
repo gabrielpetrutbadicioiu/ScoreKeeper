@@ -57,11 +57,7 @@ fun FinishGameAlertDialog(
                     modifier = Modifier.fillMaxWidth().padding(start = 8.dp),
                     horizontalArrangement = Arrangement.Start)
                 {
-                    Text(
-                        text = "${stringResource(R.string.ending_game1)} ${playerDto.name} ${stringResource(R.string.ending_game2)}",
-                        fontFamily = FontFamily.Cursive,
-                        style = MaterialTheme.typography.bodyLarge
-                    )
+
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 Row(

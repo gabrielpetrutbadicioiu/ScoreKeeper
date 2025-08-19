@@ -14,6 +14,7 @@ import ro.gtechco.scorekeeper.data.model.Score
 import ro.gtechco.scorekeeper.domain.repository.PlayerRepository
 import ro.gtechco.scorekeeper.domain.repository.ScoreRepository
 import ro.gtechco.scorekeeper.domain.use_cases.UseCases
+import kotlin.math.roundToInt
 
 class MainScreenViewModel(
     private val playerRepository: PlayerRepository,
@@ -66,9 +67,15 @@ class MainScreenViewModel(
                     playerList = playerList
                 )
             }.launchIn(viewModelScope)
-        scoreRepository.getScore(1).onEach { score-> _score.value=score
-        _createPlayerSheet.value=_createPlayerSheet.value.copy(targetScore = score.maximumScore.toString())}.launchIn(viewModelScope)
-        _editedMaximumScore.value=score.value.maximumScore.toString()
+        scoreRepository.getScore(1).onEach { score->
+            if (score!=null)
+            {
+                _score.value=score
+                _createPlayerSheet.value=_createPlayerSheet.value.copy(targetScore = score.maximumScore.toString())
+                _editedMaximumScore.value=score.maximumScore.toString()
+            }
+            }.launchIn(viewModelScope)
+
     }
 
     fun onEvent(event: MainScreenEvent)
@@ -110,7 +117,7 @@ class MainScreenViewModel(
                     )
                 }
             }
-            MainScreenEvent.OnFabClick -> {_screenState.value=_screenState.value.copy(showAddPlayerBottomSheet = true)}
+            is MainScreenEvent.OnFabClick -> {_screenState.value=_screenState.value.copy(showAddPlayerBottomSheet = true)}
             is MainScreenEvent.OnEditPlayer -> {
                 if (_editedPlayerDto.value.isEditing) {
                         viewModelScope.launch { _eventFlow.emit(UiEvent.ShowToast(message = "You can only edit one player at a time."))}
@@ -121,7 +128,7 @@ class MainScreenViewModel(
                 }
             }
 
-            MainScreenEvent.OnCancelEdit -> {
+            is MainScreenEvent.OnCancelEdit -> {
                 _editedPlayerDto.value= PlayerDto()
                 _playerDtoList.value=playerDtoList.value.map { player-> if (player.isEditing) player.copy(isEditing = false) else player }
             }
@@ -134,7 +141,7 @@ class MainScreenViewModel(
                 _editedPlayerDto.value=_editedPlayerDto.value.copy(name = event.name)
             }
 
-            MainScreenEvent.OnSaveEdit ->{
+            is MainScreenEvent.OnSaveEdit ->{
                 viewModelScope.launch {
                     useCases.updateUser.execute(
                         playerDto = _editedPlayerDto.value,
@@ -154,12 +161,12 @@ class MainScreenViewModel(
                 _screenState.value=_screenState.value.copy(showDeletePlayerAlertDialog = true)
             }
 
-            MainScreenEvent.OnDeleteDismiss -> {
+          is  MainScreenEvent.OnDeleteDismiss -> {
                 _deletedPlayer.value= PlayerDto()
                 _screenState.value=_screenState.value.copy(showDeletePlayerAlertDialog = false)
             }
 
-            MainScreenEvent.OnDeleteConfirm -> {
+           is MainScreenEvent.OnDeleteConfirm -> {
                 viewModelScope.launch { playerRepository.deletePlayer(_deletedPlayer.value.toPlayer())}
                onEvent(MainScreenEvent.OnDeleteDismiss)
             }
@@ -169,27 +176,41 @@ class MainScreenViewModel(
                 _playerDtoList.value=_playerDtoList.value.map { dto-> if (dto.id==event.id) dto.copy(isScoreDropdownMenuExpanded = true) else dto }
             }
 
-            MainScreenEvent.OnDismissScoreDropdownMenu -> {
+           is MainScreenEvent.OnDismissScoreDropdownMenu -> {
                 _playerDtoList.value=_playerDtoList.value.map { dto-> if (dto.isScoreDropdownMenuExpanded) dto.copy(isScoreDropdownMenuExpanded = false) else dto }
             }
 
-            MainScreenEvent.OnAddPointsClick ->{
+           is MainScreenEvent.OnAddPointsClick ->{
                 _screenState.value=_screenState.value.copy(showAddPointsAlertDialog = true)
                 onEvent(MainScreenEvent.OnDismissScoreDropdownMenu)
             }
 
             is MainScreenEvent.OnAddPointsValueChange -> {
-                _earnedPoints.value=event.points
+
+
+                if (event.points.startsWith("-")) {
+                    val rounded = event.points
+                        .removePrefix("-")
+                        .toDoubleOrNull()
+                        ?.roundToInt()
+                        ?.let { -it }
+                    _earnedPoints.value = rounded?.toString() ?: "-"
+                } else {
+                    val rounded = event.points.toDoubleOrNull()?.roundToInt()
+                    _earnedPoints.value = rounded?.toString() ?: event.points
+                }
+
+
             }
 
-            MainScreenEvent.OnAddPointsAdDismiss -> {
+           is MainScreenEvent.OnAddPointsAdDismiss -> {
                 _screenState.value=_screenState.value.copy(showAddPointsAlertDialog = false)
                 _earnedPoints.value=""
                 _playerScoreEditedDto.value= PlayerDto()
 
             }
 
-            MainScreenEvent.OnAddPointsAdConfirm -> {
+           is MainScreenEvent.OnAddPointsAdConfirm -> {
                 viewModelScope.launch {useCases.addEarnedPoints.execute(
                     editedPlayer = _playerScoreEditedDto.value,
                     earnedPoints = _earnedPoints.value,
@@ -197,7 +218,7 @@ class MainScreenViewModel(
                 ) }
             }
 
-            MainScreenEvent.OnDismissResetPlayerScoreAd -> {
+           is MainScreenEvent.OnDismissResetPlayerScoreAd -> {
                 _screenState.value=_screenState.value.copy(showResetPlayerScoreAlertDialog = false)
                 _playerScoreEditedDto.value=PlayerDto()
             }
@@ -207,7 +228,7 @@ class MainScreenViewModel(
                 _screenState.value=_screenState.value.copy(showResetPlayerScoreAlertDialog = true)
             }
 
-            MainScreenEvent.OnConfirmResetPlayerScore -> {
+           is MainScreenEvent.OnConfirmResetPlayerScore -> {
                 viewModelScope.launch { playerRepository.updatePlayer(_playerScoreEditedDto.value.copy(score = 0, gamesWon = 0).toPlayer()) }
                 onEvent(MainScreenEvent.OnDismissResetPlayerScoreAd)
             }
@@ -275,7 +296,7 @@ class MainScreenViewModel(
                }
                 onEvent(MainScreenEvent.OnDismissFinishGameAd)
             }
-            MainScreenEvent.OnDismissFinishGameAd -> {
+           is MainScreenEvent.OnDismissFinishGameAd -> {
                 _screenState.value=_screenState.value.copy(showFinishGameAlertDialog = false)
                 _winner.value= PlayerDto()
             }

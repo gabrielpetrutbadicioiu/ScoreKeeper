@@ -1,12 +1,15 @@
 package ro.gtechco.scorekeeper.presentantion
 
+import android.widget.Space
 import android.widget.Toast
 import androidx.compose.animation.core.EaseInOut
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -126,10 +129,15 @@ fun MainScreen(viewModel: MainScreenViewModel)
                         iterations = LottieConstants.IterateForever
                     )
                     LottieAnimation(composition = emptyScreenLottieComposition, progress = emptyScreenLottieProgress, modifier = Modifier.size(512.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(text = stringResource(R.string.empty_list),
+                        fontFamily = FontFamily.Cursive,
+                        fontSize = 20.sp)
                 }
+
             }
             else{
-                items(viewModel.playerDtoList.value, key = {it.id?:hashCode()}){ player->
+                items(viewModel.playerDtoList.value, key = {player-> player.id?: player.hashCode()}){ player->
                     PlayerItem(
                         modifier = Modifier.animateItem(placementSpec = tween(durationMillis = 1000, easing = EaseInOut)),
                         player = player,

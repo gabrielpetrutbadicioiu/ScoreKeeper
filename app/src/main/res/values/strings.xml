@@ -31,6 +31,6 @@
     <string name="total_reset_title">Reset score and games for all players?</string>
     <string name="update_winning_score">Update winning score limit</string>
     <string name="finish_game_ad">currently holds the highest score. Do you want to end this game?</string>
-    <string name="ending_game1">Ending the game will add a win to</string>
-    <string name="ending_game2">and reset all scores</string>
+
+    <string name="empty_list">No players added yet. Tap the + button to add one!</string>
 </resources>
